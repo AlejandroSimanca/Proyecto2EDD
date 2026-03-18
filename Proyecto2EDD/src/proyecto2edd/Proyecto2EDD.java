@@ -5,16 +5,19 @@
 package proyecto2edd;
 
 /**
- *
+ * clase principal que inicia la ejecucion del sistema operativo simulado.
  * @author alejandrosimanca
  */
 public class Proyecto2EDD {
 
     /**
-     * @param args the command line arguments
+     * metodo de entrada del programa.
+     * @param args argumentos de la linea de comandos.
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        TablaHash tabla = new TablaHash(100);
+        LectorCSV lector = new LectorCSV();
+        
+        lector.leerarchivo(tabla);
     }
-    
 }
