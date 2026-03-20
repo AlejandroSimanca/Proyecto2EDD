@@ -15,9 +15,8 @@ public class Proyecto2EDD {
      * @param args argumentos de la linea de comandos.
      */
     public static void main(String[] args) {
-        TablaHash tabla = new TablaHash(100);
-        LectorCSV lector = new LectorCSV();
-        
-        lector.leerarchivo(tabla);
+        VentanaPrincipal ventana = new VentanaPrincipal();
+        ventana.setVisible(true);
+        ventana.setLocationRelativeTo(null); // centra la ventana en la pantalla
     }
 }
