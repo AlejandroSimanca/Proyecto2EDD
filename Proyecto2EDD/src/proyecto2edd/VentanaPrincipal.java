@@ -26,6 +26,7 @@ public class VentanaPrincipal extends JFrame {
     private JButton btncargar;
     private JButton btnenviar;
     private JButton btnimprimir;
+    private JButton btnverarbol;
     private JTextField txtusuario;
     private JTextField txtdocumento;
     private JTextField txtpaginas;
@@ -79,6 +80,10 @@ public class VentanaPrincipal extends JFrame {
         btnimprimir.setBounds(20, 250, 200, 30);
         add(btnimprimir);
         
+        btnverarbol = new JButton("ver arbol grafico");
+        btnverarbol.setBounds(20, 300, 200, 30);
+        add(btnverarbol);
+        
         areamensajes = new JTextArea();
         areamensajes.setEditable(false);
         JScrollPane scroll = new JScrollPane(areamensajes);
@@ -130,6 +135,21 @@ public class VentanaPrincipal extends JFrame {
                 } else {
                     areamensajes.append("la cola de impresion esta vacia.\n");
                 }
+            }
+        });
+        
+        btnverarbol.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame ventanagrafico = new JFrame("arbol del monticulo binario");
+                ventanagrafico.setSize(600, 400);
+                ventanagrafico.setLocationRelativeTo(null);
+                
+                PanelArbol panel = new PanelArbol();
+                panel.actualizararbol(gestor.getColaimpresion().getMonticulo(), gestor.getColaimpresion().getTamano());
+                
+                ventanagrafico.add(panel);
+                ventanagrafico.setVisible(true);
             }
         });
     }

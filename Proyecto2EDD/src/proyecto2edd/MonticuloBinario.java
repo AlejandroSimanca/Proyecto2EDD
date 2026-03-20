@@ -105,4 +105,20 @@ public class MonticuloBinario {
 
         return raiz;
     }
+
+    /**
+     * obtiene el arreglo interno del monticulo para su visualizacion.
+     * @return el arreglo de documentos.
+     */
+    public Documento[] getMonticulo() {
+        return monticulo;
+    }
+
+    /**
+     * obtiene la cantidad actual de elementos en el monticulo.
+     * @return el tamano del monticulo.
+     */
+    public int getTamano() {
+        return tamano;
+    }
 }

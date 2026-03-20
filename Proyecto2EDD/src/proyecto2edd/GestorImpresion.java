@@ -53,4 +53,12 @@ public class GestorImpresion {
         reloj.tick();
         return doc;
     }
+
+    /**
+     * obtiene la cola de impresion actual para poder dibujarla en la interfaz.
+     * @return el monticulo binario del sistema.
+     */
+    public MonticuloBinario getColaimpresion() {
+        return colaimpresion;
+    }
 }
