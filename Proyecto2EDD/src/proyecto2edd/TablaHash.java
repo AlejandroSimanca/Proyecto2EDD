@@ -4,74 +4,71 @@
  */
 package proyecto2edd;
 
-/**
- * implementacion propia de una tabla de dispersion.
- * no utiliza librerias externas de java.
- * @author alejandrosimanca
- */
 public class TablaHash {
-    private NodoHash[] tabla;
-    private int tamano;
 
-    /**
-     * constructor que inicializa la tabla con un tamano fijo.
-     * @param tamano capacidad inicial de la tabla.
-     */
+    private NodoHash[] arreglo;
+    private int tamanoMax;
+
     public TablaHash(int tamano) {
-        this.tamano = tamano;
-        this.tabla = new NodoHash[tamano];
+        this.tamanoMax = tamano;
+        this.arreglo = new NodoHash[tamano];
     }
 
-    /**
-     * funcion de dispersion para obtener el indice.
-     * @param clave el nombre de usuario a procesar.
-     * @return el indice dentro del arreglo.
-     */
-    private int funcionhash(String clave) {
-        int hash = 0;
-        for (int i = 0; i < clave.length(); i++) {
-            hash = (31 * hash + clave.charAt(i)) % tamano;
+    private int hash(String nombre) {
+        int h = 0;
+        for (int i = 0; i < nombre.length(); i++) {
+            h = (31 * h + nombre.charAt(i)) % tamanoMax;
         }
-        return Math.abs(hash);
+        return Math.abs(h);
     }
 
-    /**
-     * inserta un usuario en la tabla.
-     * @param usuario el objeto usuario a guardar.
-     */
     public void insertar(Usuario usuario) {
-        int indice = funcionhash(usuario.getNombre());
-        NodoHash nuevo = new NodoHash(usuario.getNombre(), usuario);
-        
-        if (tabla[indice] == null) {
-            tabla[indice] = nuevo;
+        int indice = hash(usuario.getNombre());
+        NodoHash nuevo = new NodoHash(usuario);
+        if (arreglo[indice] == null) {
+            arreglo[indice] = nuevo;
         } else {
-            NodoHash actual = tabla[indice];
+            NodoHash actual = arreglo[indice];
             while (actual.getSiguiente() != null) {
-                if (actual.getClave().equals(usuario.getNombre())) {
-                    return; // el usuario ya existe
+                if (actual.getUsuario().getNombre().equals(usuario.getNombre())) {
+                    return;
                 }
                 actual = actual.getSiguiente();
             }
-            actual.setSiguiente(nuevo);
+            if (!actual.getUsuario().getNombre().equals(usuario.getNombre())) {
+                actual.setSiguiente(nuevo);
+            }
         }
     }
 
-    /**
-     * busca un usuario por su nombre.
-     * @param nombre el identificador a buscar.
-     * @return el objeto usuario o null si no existe.
-     */
     public Usuario buscar(String nombre) {
-        int indice = funcionhash(nombre);
-        NodoHash actual = tabla[indice];
-        
+        int indice = hash(nombre);
+        NodoHash actual = arreglo[indice];
         while (actual != null) {
-            if (actual.getClave().equals(nombre)) {
-                return actual.getValor();
+            if (actual.getUsuario().getNombre().equals(nombre)) {
+                return actual.getUsuario();
             }
             actual = actual.getSiguiente();
         }
         return null;
+    }
+
+    public void eliminar(String nombre) {
+        int indice = hash(nombre);
+        if (arreglo[indice] == null) {
+            return;
+        }
+        if (arreglo[indice].getUsuario().getNombre().equals(nombre)) {
+            arreglo[indice] = arreglo[indice].getSiguiente();
+            return;
+        }
+        NodoHash actual = arreglo[indice];
+        while (actual.getSiguiente() != null) {
+            if (actual.getSiguiente().getUsuario().getNombre().equals(nombre)) {
+                actual.setSiguiente(actual.getSiguiente().getSiguiente());
+                return;
+            }
+            actual = actual.getSiguiente();
+        }
     }
 }

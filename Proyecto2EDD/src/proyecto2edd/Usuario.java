@@ -5,21 +5,25 @@
 package proyecto2edd;
 
 /**
- * representa a un usuario del sistema de impresion.
+ * representa un usuario del sistema operativo.
+ * contiene su nivel de prioridad y la lista de documentos que ha creado.
  * @author alejandrosimanca
  */
 public class Usuario {
     private String nombre;
     private String tipoprioridad;
+    private ListaDocumentos documentos;
 
     /**
-     * constructor para crear un nuevo usuario.
-     * @param nombre el identificador del usuario.
-     * @param tipoprioridad el nivel de prioridad asignado.
+     * constructor del usuario.
+     * @param nombre identificador unico del usuario.
+     * @param tipoprioridad prioridad (alta, media, baja).
      */
     public Usuario(String nombre, String tipoprioridad) {
         this.nombre = nombre;
         this.tipoprioridad = tipoprioridad;
+        // Inicializamos su lista de documentos vacia
+        this.documentos = new ListaDocumentos();
     }
 
     public String getNombre() {
@@ -30,13 +34,8 @@ public class Usuario {
         return tipoprioridad;
     }
 
-    @Override
-    public String toString() {
-        return "usuario: " + nombre + " (" + tipoprioridad + ")";
+    // ¡Este es el metodo que faltaba!
+    public ListaDocumentos getDocumentos() {
+        return documentos;
     }
 }
-
-/**
- *
- * @author alejandrosimanca
- */

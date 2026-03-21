@@ -5,18 +5,20 @@
 package proyecto2edd;
 
 /**
- * clase principal que inicia la ejecucion del sistema operativo simulado.
+ * clase principal que inicia la aplicacion.
  * @author alejandrosimanca
  */
 public class Proyecto2EDD {
 
     /**
-     * metodo de entrada del programa.
-     * @param args argumentos de la linea de comandos.
+     * metodo main que arranca el sistema de impresion.
+     * @param args los argumentos de la linea de comandos.
      */
     public static void main(String[] args) {
+        // instanciamos y mostramos la ventana principal
         VentanaPrincipal ventana = new VentanaPrincipal();
+        ventana.setLocationRelativeTo(null); // esto centra la ventana en la pantalla
         ventana.setVisible(true);
-        ventana.setLocationRelativeTo(null); // centra la ventana en la pantalla
     }
+    
 }

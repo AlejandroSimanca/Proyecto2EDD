@@ -5,8 +5,8 @@
 package proyecto2edd;
 
 /**
- * representa un documento que sera enviado a la cola de impresion.
- * contiene informacion sobre su tamano, dueno y etiqueta de tiempo.
+ * representa un documento que pertenece a un usuario.
+ * contiene informacion sobre su tamano, dueno, etiqueta de tiempo y estado.
  * @author alejandrosimanca
  */
 public class Documento {
@@ -14,19 +14,22 @@ public class Documento {
     private int tamano;
     private Usuario dueno;
     private int etiquetatiempo;
+    private boolean encola;
+    private int indiceCola; // <- NUEVO: Guarda en que posicion del arreglo esta
 
     /**
      * constructor de la clase documento.
      * @param nombre el nombre del archivo o documento.
      * @param tamano el numero de paginas o peso del documento.
      * @param dueno el usuario que envio a imprimir el documento.
-     * @param etiquetatiempo el valor que determina su posicion en la cola.
      */
-    public Documento(String nombre, int tamano, Usuario dueno, int etiquetatiempo) {
+    public Documento(String nombre, int tamano, Usuario dueno) {
         this.nombre = nombre;
         this.tamano = tamano;
         this.dueno = dueno;
-        this.etiquetatiempo = etiquetatiempo;
+        this.etiquetatiempo = 0;
+        this.encola = false;
+        this.indiceCola = -1; // -1 significa que no esta en la cola
     }
 
     public String getNombre() {
@@ -45,16 +48,29 @@ public class Documento {
         return etiquetatiempo;
     }
 
-    /**
-     * permite actualizar la etiqueta de tiempo si es necesario cambiar su prioridad.
-     * @param etiquetatiempo el nuevo valor numerico de prioridad.
-     */
     public void setEtiquetatiempo(int etiquetatiempo) {
         this.etiquetatiempo = etiquetatiempo;
     }
 
+    public boolean isEncola() {
+        return encola;
+    }
+
+    public void setEncola(boolean encola) {
+        this.encola = encola;
+    }
+
+    public int getIndiceCola() {
+        return indiceCola;
+    }
+
+    public void setIndiceCola(int indiceCola) {
+        this.indiceCola = indiceCola;
+    }
+
     @Override
     public String toString() {
-        return "documento: " + nombre + " | paginas: " + tamano + " | dueno: " + dueno.getNombre();
+        String estado = encola ? "[en cola]" : "[esperando]";
+        return estado + " doc: " + nombre + " | paginas: " + tamano;
     }
 }

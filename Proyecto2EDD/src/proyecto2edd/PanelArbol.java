@@ -5,66 +5,111 @@
 package proyecto2edd;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 
 /**
- * panel encargado de dibujar graficamente el monticulo binario.
- * utiliza la clase graphics nativa de java para pintar nodos y aristas.
+ * panel grafico encargado de dibujar el monticulo binario en forma de arbol.
  * @author alejandrosimanca
  */
 public class PanelArbol extends JPanel {
+    
     private Documento[] monticulo;
     private int tamano;
+    
+    // configuracion visual del arbol
+    private final int RADIO = 20; // tamano de los circulos
+    private final int ESPACIO_VERTICAL = 60; // distancia hacia abajo entre cada nivel
+
+    public PanelArbol() {
+        this.monticulo = null;
+        this.tamano = 0;
+        setBackground(Color.WHITE); // fondo blanco para que resalte
+    }
 
     /**
-     * actualiza los datos del arbol y repinta el panel.
-     * @param monticulo el arreglo de documentos actual en la cola.
-     * @param tamano la cantidad de elementos validos en el arreglo.
+     * actualiza los datos del panel y fuerza a que se vuelva a dibujar.
+     * @param monticulo el arreglo actual del monticulo binario.
+     * @param tamano la cantidad de elementos en la cola.
      */
     public void actualizararbol(Documento[] monticulo, int tamano) {
         this.monticulo = monticulo;
         this.tamano = tamano;
-        repaint();
+        repaint(); // esto llama automaticamente al metodo paintComponent
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        
+        // si la cola esta vacia, avisamos en pantalla
         if (monticulo == null || tamano == 0) {
+            g.setFont(new Font("Arial", Font.BOLD, 16));
+            g.setColor(Color.RED);
+            g.drawString("la cola de impresion esta vacia.", 20, 30);
             return;
         }
-        dibujarnodo(g, 0, getWidth() / 2, 30, getWidth() / 4);
+        
+        g.setFont(new Font("Arial", Font.BOLD, 14));
+        // iniciamos el dibujo desde la raiz (indice 0) en el centro superior
+        dibujarnodo(g, 0, getWidth() / 2, 40, getWidth() / 4);
     }
 
     /**
-     * metodo recursivo para dibujar cada nodo y sus lineas a los hijos.
-     * @param g el objeto de graficos de java.
-     * @param indice la posicion actual en el arreglo.
-     * @param x la coordenada x en pantalla.
-     * @param y la coordenada y en pantalla.
-     * @param espacio el espacio horizontal para separar los hijos.
+     * metodo recursivo que dibuja un nodo y sus hijos (lineas y circulos).
+     * @param g el objeto de graficos de Java.
+     * @param indice la posicion del documento en el arreglo.
+     * @param x la coordenada X donde se dibujara el nodo.
+     * @param y la coordenada Y donde se dibujara el nodo.
+     * @param espacio_horizontal la separacion horizontal para los hijos.
      */
-    private void dibujarnodo(Graphics g, int indice, int x, int y, int espacio) {
-        int hijoizquierdo = 2 * indice + 1;
-        int hijoderecho = 2 * indice + 2;
-
-        if (hijoizquierdo < tamano) {
-            g.drawLine(x, y, x - espacio, y + 50);
-            dibujarnodo(g, hijoizquierdo, x - espacio, y + 50, espacio / 2);
+    private void dibujarnodo(Graphics g, int indice, int x, int y, int espacio_horizontal) {
+        if (indice >= tamano || monticulo[indice] == null) {
+            return;
         }
 
-        if (hijoderecho < tamano) {
-            g.drawLine(x, y, x + espacio, y + 50);
-            dibujarnodo(g, hijoderecho, x + espacio, y + 50, espacio / 2);
+        int hijoIzq = (2 * indice) + 1;
+        int hijoDer = (2 * indice) + 2;
+
+        g.setColor(Color.BLACK); // color de las lineas conectoras
+
+        // si tiene hijo izquierdo, dibujamos la linea hacia el y llamamos a la recursion
+        if (hijoIzq < tamano && monticulo[hijoIzq] != null) {
+            int nx = x - espacio_horizontal;
+            int ny = y + ESPACIO_VERTICAL;
+            g.drawLine(x, y, nx, ny);
+            dibujarnodo(g, hijoIzq, nx, ny, espacio_horizontal / 2);
         }
 
-        g.setColor(Color.CYAN);
-        g.fillOval(x - 15, y - 15, 30, 30);
-        g.setColor(Color.BLACK);
-        g.drawOval(x - 15, y - 15, 30, 30);
+        // si tiene hijo derecho, dibujamos la linea hacia el y llamamos a la recursion
+        if (hijoDer < tamano && monticulo[hijoDer] != null) {
+            int nx = x + espacio_horizontal;
+            int ny = y + ESPACIO_VERTICAL;
+            g.drawLine(x, y, nx, ny);
+            dibujarnodo(g, hijoDer, nx, ny, espacio_horizontal / 2);
+        }
+
+        // dibujamos el circulo del nodo actual (encima de las lineas para taparlas)
+        g.setColor(new Color(135, 206, 250)); // color azul claro (SkyBlue)
+        g.fillOval(x - RADIO, y - RADIO, 2 * RADIO, 2 * RADIO);
         
-        String texto = String.valueOf(monticulo[indice].getEtiquetatiempo());
-        g.drawString(texto, x - 5, y + 5);
+        g.setColor(Color.BLACK); // borde del circulo
+        g.drawOval(x - RADIO, y - RADIO, 2 * RADIO, 2 * RADIO);
+
+        // dibujamos el numero de prioridad en el centro del circulo
+        String prioridad = String.valueOf(monticulo[indice].getEtiquetatiempo());
+        // calculamos un pequeno ajuste para que el texto quede centrado
+        int ajustex = g.getFontMetrics().stringWidth(prioridad) / 2;
+        int ajustey = g.getFontMetrics().getAscent() / 4;
+        
+        g.setColor(Color.BLACK);
+        g.drawString(prioridad, x - ajustex, y + ajustey);
+        
+        // dibujamos el nombre del documento abajito del circulo
+        String nombreDoc = monticulo[indice].getNombre();
+        int ajusteNombre = g.getFontMetrics().stringWidth(nombreDoc) / 2;
+        g.setColor(Color.DARK_GRAY);
+        g.drawString(nombreDoc, x - ajusteNombre, y + RADIO + 15);
     }
 }

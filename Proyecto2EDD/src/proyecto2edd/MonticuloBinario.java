@@ -40,6 +40,10 @@ public class MonticuloBinario {
         Documento temporal = monticulo[i];
         monticulo[i] = monticulo[j];
         monticulo[j] = temporal;
+        
+        // ACTUALIZACION: Cada vez que se mueven, les avisamos su nueva posicion
+        if (monticulo[i] != null) monticulo[i].setIndiceCola(i);
+        if (monticulo[j] != null) monticulo[j].setIndiceCola(j);
     }
 
     /**
@@ -55,6 +59,7 @@ public class MonticuloBinario {
         tamano++;
         int i = tamano - 1;
         monticulo[i] = doc;
+        doc.setIndiceCola(i); // le decimos su posicion inicial
 
         while (i != 0 && monticulo[getPadre(i)].getEtiquetatiempo() > monticulo[i].getEtiquetatiempo()) {
             intercambiar(i, getPadre(i));
@@ -95,15 +100,43 @@ public class MonticuloBinario {
         }
         if (tamano == 1) {
             tamano--;
+            monticulo[0].setIndiceCola(-1);
             return monticulo[0];
         }
 
         Documento raiz = monticulo[0];
+        raiz.setIndiceCola(-1); // le quitamos su indice porque ya salio
+        
         monticulo[0] = monticulo[tamano - 1];
+        if (monticulo[0] != null) monticulo[0].setIndiceCola(0);
+        
         tamano--;
         minHeapify(0);
 
         return raiz;
+    }
+    
+    /**
+     * cancela un documento especifico en la cola usando su indice en O(log n).
+     * aplica el truco de cambiar la prioridad y hacer un extraerMinimo.
+     * @param indice la posicion del documento en el arreglo.
+     */
+    public void cancelarDocumento(int indice) {
+        if (indice < 0 || indice >= tamano) return;
+        
+        // 1. Cambiamos su etiqueta a un valor sumamente bajo
+        monticulo[indice].setEtiquetatiempo(-999999);
+        
+        // 2. Lo obligamos a flotar hasta la raiz (posicion 0)
+        int i = indice;
+        while (i != 0 && monticulo[getPadre(i)].getEtiquetatiempo() > monticulo[i].getEtiquetatiempo()) {
+            intercambiar(i, getPadre(i));
+            i = getPadre(i);
+        }
+        
+        // 3. Extraemos la raiz (lo eliminamos de la cola pero no lo mandamos a imprimir)
+        Documento cancelado = extraerMinimo();
+        cancelado.setEncola(false); // ya no esta en cola
     }
 
     /**

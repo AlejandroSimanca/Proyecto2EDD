@@ -34,14 +34,47 @@ public class GestorImpresion {
         Usuario usuario = usuarios.buscar(nombreusuario);
         
         if (usuario != null) {
+            Documento nuevodocumento = new Documento(nombredocumento, tamano, usuario);
+            usuario.getDocumentos().insertar(nuevodocumento);
+            
             int etiqueta = reloj.crearEtiqueta(usuario.getTipoprioridad());
-            Documento nuevodocumento = new Documento(nombredocumento, tamano, usuario, etiqueta);
+            nuevodocumento.setEtiquetatiempo(etiqueta);
+            nuevodocumento.setEncola(true);
+            
             colaimpresion.insertar(nuevodocumento);
             reloj.tick();
-            System.out.println("documento enviado a la cola con exito.");
+            
+            System.out.println("documento creado y enviado a la cola con exito.");
         } else {
             System.out.println("error: el usuario no existe en el sistema.");
         }
+    }
+
+    /**
+     * cancela un documento que ya se encuentra en la cola de impresion.
+     * @param nombreusuario el dueno del documento.
+     * @param nombredocumento el nombre del documento a cancelar.
+     * @return un mensaje indicando el resultado de la operacion.
+     */
+    public String cancelarImpresion(String nombreusuario, String nombredocumento) {
+        Usuario usuario = usuarios.buscar(nombreusuario);
+        if (usuario == null) {
+            return "error: usuario no encontrado.";
+        }
+        
+        Documento doc = usuario.getDocumentos().buscar(nombredocumento);
+        if (doc == null) {
+            return "error: el usuario no tiene un documento con ese nombre.";
+        }
+        
+        if (!doc.isEncola() || doc.getIndiceCola() == -1) {
+            return "error: el documento no esta actualmente en la cola.";
+        }
+        
+        // ¡Aqui ocurre la magia! Extraemos el indice y lo cancelamos en O(log n)
+        colaimpresion.cancelarDocumento(doc.getIndiceCola());
+        reloj.tick();
+        return "exito: el documento " + nombredocumento + " fue cancelado y retirado de la cola.";
     }
 
     /**
@@ -50,15 +83,18 @@ public class GestorImpresion {
      */
     public Documento imprimirsiguiente() {
         Documento doc = colaimpresion.extraerMinimo();
-        reloj.tick();
+        if (doc != null) {
+            doc.setEncola(false);
+            reloj.tick();
+        }
         return doc;
     }
 
-    /**
-     * obtiene la cola de impresion actual para poder dibujarla en la interfaz.
-     * @return el monticulo binario del sistema.
-     */
     public MonticuloBinario getColaimpresion() {
         return colaimpresion;
+    }
+    
+    public TablaHash getUsuarios() {
+        return usuarios;
     }
 }
