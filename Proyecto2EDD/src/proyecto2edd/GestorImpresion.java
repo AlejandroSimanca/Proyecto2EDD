@@ -34,7 +34,7 @@ public class GestorImpresion {
         Usuario usuario = usuarios.buscar(nombreusuario);
         
         if (usuario != null) {
-            Documento nuevodocumento = new Documento(nombredocumento, tamano, usuario);
+            Documento nuevodocumento = new Documento(nombredocumento, tamano);
             usuario.getDocumentos().insertar(nuevodocumento);
             
             int etiqueta = reloj.crearEtiqueta(usuario.getTipoprioridad());
@@ -42,14 +42,8 @@ public class GestorImpresion {
             nuevodocumento.setEncola(true);
             
             colaimpresion.insertar(nuevodocumento);
-            reloj.tick();
-            
-            System.out.println("documento creado y enviado a la cola con exito.");
-        } else {
-            System.out.println("error: el usuario no existe en el sistema.");
         }
     }
-
     /**
      * cancela un documento que ya se encuentra en la cola de impresion.
      * @param nombreusuario el dueno del documento.
@@ -71,7 +65,6 @@ public class GestorImpresion {
             return "error: el documento no esta actualmente en la cola.";
         }
         
-        // ¡Aqui ocurre la magia! Extraemos el indice y lo cancelamos en O(log n)
         colaimpresion.cancelarDocumento(doc.getIndiceCola());
         reloj.tick();
         return "exito: el documento " + nombredocumento + " fue cancelado y retirado de la cola.";

@@ -43,7 +43,7 @@ public class VentanaPrincipal extends JFrame {
         gestor = new GestorImpresion(tablausuarios);
         
         setTitle("sistema de impresion");
-        setSize(600, 550); // Hice la ventana mas alta para que quepan los botones
+        setSize(600, 550); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
         
@@ -106,7 +106,7 @@ public class VentanaPrincipal extends JFrame {
         areamensajes = new JTextArea();
         areamensajes.setEditable(false);
         JScrollPane scroll = new JScrollPane(areamensajes);
-        scroll.setBounds(250, 20, 310, 440); // Hice el cuadro de texto mas largo
+        scroll.setBounds(250, 20, 310, 440); 
         add(scroll);
         
         configurarEventos();
@@ -177,7 +177,7 @@ public class VentanaPrincipal extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 Documento doc = gestor.imprimirsiguiente();
                 if (doc != null) {
-                    areamensajes.append("imprimiendo: " + doc.getNombre() + " (" + doc.getDueno().getNombre() + ")\n");
+                    areamensajes.append("imprimiendo: " + doc.getNombre());
                 } else {
                     areamensajes.append("la cola de impresion esta vacia.\n");
                 }

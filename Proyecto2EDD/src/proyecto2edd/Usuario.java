@@ -22,7 +22,6 @@ public class Usuario {
     public Usuario(String nombre, String tipoprioridad) {
         this.nombre = nombre;
         this.tipoprioridad = tipoprioridad;
-        // Inicializamos su lista de documentos vacia
         this.documentos = new ListaDocumentos();
     }
 
@@ -34,7 +33,6 @@ public class Usuario {
         return tipoprioridad;
     }
 
-    // ¡Este es el metodo que faltaba!
     public ListaDocumentos getDocumentos() {
         return documentos;
     }

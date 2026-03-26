@@ -15,9 +15,8 @@ public class Proyecto2EDD {
      * @param args los argumentos de la linea de comandos.
      */
     public static void main(String[] args) {
-        // instanciamos y mostramos la ventana principal
         VentanaPrincipal ventana = new VentanaPrincipal();
-        ventana.setLocationRelativeTo(null); // esto centra la ventana en la pantalla
+        ventana.setLocationRelativeTo(null); 
         ventana.setVisible(true);
     }
     

@@ -18,14 +18,13 @@ public class PanelArbol extends JPanel {
     private Documento[] monticulo;
     private int tamano;
     
-    // configuracion visual del arbol
-    private final int RADIO = 20; // tamano de los circulos
-    private final int ESPACIO_VERTICAL = 60; // distancia hacia abajo entre cada nivel
+    private final int RADIO = 20; 
+    private final int ESPACIO_VERTICAL = 60; 
 
     public PanelArbol() {
         this.monticulo = null;
         this.tamano = 0;
-        setBackground(Color.WHITE); // fondo blanco para que resalte
+        setBackground(Color.WHITE);
     }
 
     /**
@@ -36,14 +35,13 @@ public class PanelArbol extends JPanel {
     public void actualizararbol(Documento[] monticulo, int tamano) {
         this.monticulo = monticulo;
         this.tamano = tamano;
-        repaint(); // esto llama automaticamente al metodo paintComponent
+        repaint(); 
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         
-        // si la cola esta vacia, avisamos en pantalla
         if (monticulo == null || tamano == 0) {
             g.setFont(new Font("Arial", Font.BOLD, 16));
             g.setColor(Color.RED);
@@ -52,7 +50,6 @@ public class PanelArbol extends JPanel {
         }
         
         g.setFont(new Font("Arial", Font.BOLD, 14));
-        // iniciamos el dibujo desde la raiz (indice 0) en el centro superior
         dibujarnodo(g, 0, getWidth() / 2, 40, getWidth() / 4);
     }
 
@@ -72,9 +69,7 @@ public class PanelArbol extends JPanel {
         int hijoIzq = (2 * indice) + 1;
         int hijoDer = (2 * indice) + 2;
 
-        g.setColor(Color.BLACK); // color de las lineas conectoras
-
-        // si tiene hijo izquierdo, dibujamos la linea hacia el y llamamos a la recursion
+        g.setColor(Color.BLACK); 
         if (hijoIzq < tamano && monticulo[hijoIzq] != null) {
             int nx = x - espacio_horizontal;
             int ny = y + ESPACIO_VERTICAL;
@@ -82,7 +77,6 @@ public class PanelArbol extends JPanel {
             dibujarnodo(g, hijoIzq, nx, ny, espacio_horizontal / 2);
         }
 
-        // si tiene hijo derecho, dibujamos la linea hacia el y llamamos a la recursion
         if (hijoDer < tamano && monticulo[hijoDer] != null) {
             int nx = x + espacio_horizontal;
             int ny = y + ESPACIO_VERTICAL;
@@ -90,23 +84,19 @@ public class PanelArbol extends JPanel {
             dibujarnodo(g, hijoDer, nx, ny, espacio_horizontal / 2);
         }
 
-        // dibujamos el circulo del nodo actual (encima de las lineas para taparlas)
-        g.setColor(new Color(135, 206, 250)); // color azul claro (SkyBlue)
+        g.setColor(new Color(135, 206, 250)); 
         g.fillOval(x - RADIO, y - RADIO, 2 * RADIO, 2 * RADIO);
         
-        g.setColor(Color.BLACK); // borde del circulo
+        g.setColor(Color.BLACK); 
         g.drawOval(x - RADIO, y - RADIO, 2 * RADIO, 2 * RADIO);
 
-        // dibujamos el numero de prioridad en el centro del circulo
         String prioridad = String.valueOf(monticulo[indice].getEtiquetatiempo());
-        // calculamos un pequeno ajuste para que el texto quede centrado
         int ajustex = g.getFontMetrics().stringWidth(prioridad) / 2;
         int ajustey = g.getFontMetrics().getAscent() / 4;
         
         g.setColor(Color.BLACK);
         g.drawString(prioridad, x - ajustex, y + ajustey);
         
-        // dibujamos el nombre del documento abajito del circulo
         String nombreDoc = monticulo[indice].getNombre();
         int ajusteNombre = g.getFontMetrics().stringWidth(nombreDoc) / 2;
         g.setColor(Color.DARK_GRAY);
